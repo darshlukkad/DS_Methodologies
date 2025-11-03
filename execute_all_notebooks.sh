@@ -10,19 +10,19 @@ echo ""
 
 # Execute CRISP-DM
 echo "1️⃣  Executing CRISP_DM.ipynb (~5 min)..."
-jupyter nbconvert --to notebook --execute --inplace data-mining-methodologies-portfolio/crisp_dm/CRISP_DM.ipynb
+jupyter nbconvert --to notebook --execute --inplace crisp_dm/CRISP_DM.ipynb
 echo "✅ CRISP-DM complete!"
 echo ""
 
 # Execute SEMMA
 echo "2️⃣  Executing SEMMA.ipynb (~2 min)..."
-jupyter nbconvert --to notebook --execute --inplace data-mining-methodologies-portfolio/semma/SEMMA.ipynb
+jupyter nbconvert --to notebook --execute --inplace semma/SEMMA.ipynb
 echo "✅ SEMMA complete!"
 echo ""
 
 # Execute KDD
 echo "3️⃣  Executing KDD.ipynb (~3 min)..."
-jupyter nbconvert --to notebook --execute --inplace data-mining-methodologies-portfolio/kdd/KDD.ipynb
+jupyter nbconvert --to notebook --execute --inplace kdd/KDD.ipynb
 echo "✅ KDD complete!"
 echo ""
 
