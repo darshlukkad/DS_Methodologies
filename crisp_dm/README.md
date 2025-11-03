@@ -5,6 +5,8 @@
 **Expert Critic:** Dr. Viktor Grigoriev (Yandex ML Systems Architect)  
 **Status:** ✅ **100% Complete - Production Ready**
 
+**Medium article:** https://medium.com/@darshlukkad/crisp-dm-in-practice-a-hands-on-guide-to-reliable-data-science-projects-8f11d2f1ed1d
+
 ---
 
 ## 📊 Project Overview

@@ -8,6 +8,8 @@
 **Source:** Canadian Institute for Cybersecurity  
 **Problem Type:** Multi-class Classification (Normal, DoS, Probe, R2L, U2R)
 
+**Medium article:** https://medium.com/@darshlukkad/knowledge-discovery-in-practice-a-reproducible-kdd-walkthrough-for-weekly-sales-forecasting-076969dcb444
+
 ## Methodology Phases
 
 ### 1. Selection

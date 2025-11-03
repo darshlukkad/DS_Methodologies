@@ -8,6 +8,8 @@
 **Source:** UCI ML Repository / Kaggle  
 **Problem Type:** Classification (Binary: Pass/Fail or Multi-class: Grade levels)
 
+**Medium article:** https://medium.com/@darshlukkad/applying-semma-for-reproducible-weekly-sales-forecasting-cd954f58f664
+
 ## Methodology Phases
 
 ### 1. Sample
