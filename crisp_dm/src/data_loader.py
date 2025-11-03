@@ -64,16 +64,14 @@ def download_walmart_data(data_dir: str = "data/raw") -> bool:
     logger.info("Downloading Walmart Sales Forecasting data from Kaggle...")
     
     try:
-        # Download using Kaggle API
-        result = subprocess.run(
-            [
-                'kaggle', 'competitions', 'download',
-                '-c', 'walmart-recruiting-store-sales-forecasting',
-                '-p', data_dir
-            ],
-            capture_output=True,
-            text=True,
-            check=True
+        # Download using Kaggle Python API
+        from kaggle.api.kaggle_api_extended import KaggleApi
+        api = KaggleApi()
+        api.authenticate()
+        
+        api.competition_download_files(
+            'walmart-recruiting-store-sales-forecasting',
+            path=data_dir
         )
         logger.info("✓ Download complete")
         

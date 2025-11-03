@@ -1,0 +1,105 @@
+
+1. MODEL PERFORMANCE MONITORING (Weekly)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Metrics to Track:
+   • SMAPE, WAPE, RMSE, MAE (compare to baseline)
+   • Performance by Store Type, Department, Holiday period
+   • Prediction confidence intervals (% within bounds)
+
+   Alert Thresholds:
+   ⚠️  SMAPE increases by >10% from baseline → Investigate model drift
+   ⚠️  >5% of predictions outside confidence intervals → Retrain model
+   ⚠️  Holiday week SMAPE >30% → Add more holiday features
+
+   Tools: MLflow for metric tracking, Evidently for drift detection
+
+2. DATA DRIFT MONITORING (Daily)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Feature Distribution Checks:
+   • Kolmogorov-Smirnov test for continuous features (Temperature, Fuel_Price, CPI)
+   • Chi-square test for categorical features (Store Type)
+   • Statistical distance metrics (KL-divergence, PSI)
+
+   Alert Thresholds:
+   ⚠️  KS test p < 0.05 → Significant distribution shift detected
+   ⚠️  PSI > 0.2 → Moderate drift, monitor closely
+   ⚠️  PSI > 0.3 → Severe drift, retrain immediately
+
+   Tools: Evidently AI, custom drift detection scripts
+
+3. PREDICTION QUALITY MONITORING (Real-time)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Real-time Checks:
+   • Flag predictions >3 standard deviations from training mean
+   • Check for missing features in production data
+   • Validate input data ranges (Temperature: -20 to 120°F, etc.)
+   • Monitor API latency (p50, p95, p99)
+
+   Alert Thresholds:
+   ⚠️  >1% of predictions flagged as anomalies → Investigate data quality
+   ⚠️  API latency p95 > 500ms → Scale infrastructure
+   ⚠️  >5 missing feature errors/hour → Fix data pipeline
+
+   Tools: API logs, Prometheus + Grafana for metrics
+
+4. MODEL RETRAINING SCHEDULE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Regular Retraining:
+   • Quarterly (every 13 weeks) - Scheduled retraining with latest data
+   • After major events - Holiday seasons, store openings/closures
+   • Drift-triggered - When PSI > 0.3 or SMAPE increases by >15%
+
+   Retraining Process:
+   1. Pull latest 2 years of data from production database
+   2. Re-run feature engineering pipeline (leakage-safe)
+   3. Train on same architecture + hyperparameters
+   4. Validate on most recent 8 weeks (hold-out validation)
+   5. A/B test new model vs current model (2 weeks, 10% traffic)
+   6. Deploy if new model SMAPE < current model SMAPE
+
+   Tools: MLflow for experiment tracking, Airflow for orchestration
+
+5. INCIDENT RESPONSE PLAN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Severity Levels:
+
+   P0 (Critical - Respond in 15 min):
+   • API completely down (health check failing)
+   • >50% of predictions failing validation
+   • Security breach or data leak
+   → Rollback to previous model version immediately
+
+   P1 (High - Respond in 2 hours):
+   • SMAPE >30% increase from baseline
+   • Severe data drift (PSI > 0.3)
+   • API latency p95 > 2 seconds
+   → Investigate root cause, prepare hotfix
+
+   P2 (Medium - Respond in 1 day):
+   • Moderate drift (PSI 0.2-0.3)
+   • SMAPE 15-30% increase
+   • Feature importance shift >20%
+   → Schedule retraining, monitor closely
+
+   P3 (Low - Respond in 1 week):
+   • Minor drift (PSI < 0.2)
+   • SMAPE 5-15% increase
+   • Documentation updates needed
+   → Add to backlog for next sprint
+
+6. CONTINUOUS IMPROVEMENT ROADMAP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Q1 2026:
+   ✓ Implement ensemble models (stack LightGBM + XGBoost)
+   ✓ Add external features (weather forecasts, competitor data)
+   ✓ Deploy separate models for high-volatility Store-Dept pairs
+
+   Q2 2026:
+   ✓ Implement conformal prediction for calibrated confidence intervals
+   ✓ Add SHAP explanations to API responses
+   ✓ Migrate to real-time streaming predictions (Kafka + Spark)
+
+   Q3 2026:
+   ✓ Test deep learning models (LSTM, Transformer for time-series)
+   ✓ Implement automated hyperparameter tuning (Optuna)
+   ✓ Add causal inference for markdown effect estimation

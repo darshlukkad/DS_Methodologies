@@ -114,13 +114,15 @@ def create_holiday_features(df: pd.DataFrame, date_col: str = 'Date') -> pd.Data
         # Find next Christmas
         xmas = christmas_dates[christmas_dates.year == curr_year]
         if len(xmas) > 0:
-            days_diff = (xmas.iloc[0] - curr_date).days
+            xmas_date = xmas[0] if isinstance(xmas, pd.DatetimeIndex) else xmas.iloc[0]
+            days_diff = (xmas_date - curr_date).days
             df.at[idx, 'weeks_to_christmas'] = max(0, days_diff // 7)
         
         # Find next Thanksgiving
         tgiving = thanksgiving_dates[thanksgiving_dates.year == curr_year]
         if len(tgiving) > 0:
-            days_diff = (tgiving.iloc[0] - curr_date).days
+            tgiving_date = tgiving[0] if isinstance(tgiving, pd.DatetimeIndex) else tgiving.iloc[0]
+            days_diff = (tgiving_date - curr_date).days
             df.at[idx, 'weeks_to_thanksgiving'] = max(0, days_diff // 7)
     
     logger.info(f"✓ Created holiday features")
@@ -146,6 +148,16 @@ def create_lag_features(
         DataFrame with lag features
     """
     df = df.copy()
+    
+    # Skip if target column doesn't exist (e.g., test data)
+    if target_col not in df.columns:
+        logger.info(f"⚠ Skipping lag features - {target_col} not found in DataFrame")
+        # Create empty lag columns filled with NaN
+        for lag in lags:
+            col_name = f'{target_col.lower()}_lag_{lag}'
+            df[col_name] = pd.NA
+        return df
+    
     df = df.sort_values(group_cols + ['Date'])
     
     for lag in lags:
@@ -175,6 +187,18 @@ def create_rolling_features(
         DataFrame with rolling features
     """
     df = df.copy()
+    
+    # Skip if target column doesn't exist (e.g., test data)
+    if target_col not in df.columns:
+        logger.info(f"⚠ Skipping rolling features - {target_col} not found in DataFrame")
+        # Create empty rolling columns filled with NaN
+        for window in windows:
+            col_mean = f'{target_col.lower()}_rolling_mean_{window}'
+            col_std = f'{target_col.lower()}_rolling_std_{window}'
+            df[col_mean] = pd.NA
+            df[col_std] = pd.NA
+        return df
+    
     df = df.sort_values(group_cols + ['Date'])
     
     for window in windows:

@@ -68,13 +68,25 @@ def calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float
     Returns:
         Dictionary of metrics
     """
-    return {
+    # Canonical (capitalized) keys for internal use and lowercase aliases for notebook compatibility
+    metrics = {
         'MAE': mean_absolute_error(y_true, y_pred),
         'RMSE': np.sqrt(mean_squared_error(y_true, y_pred)),
         'R2': r2_score(y_true, y_pred),
         'sMAPE': smape(y_true, y_pred),
         'WAPE': wape(y_true, y_pred)
     }
+
+    # Add lowercase aliases expected by the notebook (smape, wape, rmse, mae, r2)
+    metrics.update({
+        'mae': metrics['MAE'],
+        'rmse': metrics['RMSE'],
+        'r2': metrics['R2'],
+        'smape': metrics['sMAPE'],
+        'wape': metrics['WAPE']
+    })
+
+    return metrics
 
 
 def naive_baseline_last_week(
@@ -163,7 +175,7 @@ def train_ridge(
     X_val: pd.DataFrame,
     y_val: np.ndarray,
     alpha: float = 1.0
-) -> Tuple[Ridge, Dict[str, float]]:
+) -> Tuple[Ridge, np.ndarray, Dict[str, float]]:
     """
     Train Ridge regression model.
     
@@ -180,9 +192,9 @@ def train_ridge(
     
     predictions = model.predict(X_val)
     metrics = calculate_metrics(y_val, predictions)
-    
+
     logger.info(f"Ridge (alpha={alpha}) - MAE: {metrics['MAE']:.2f}, sMAPE: {metrics['sMAPE']:.2f}%")
-    return model, metrics
+    return model, predictions, metrics
 
 
 def train_random_forest(
@@ -192,7 +204,7 @@ def train_random_forest(
     y_val: np.ndarray,
     n_estimators: int = 100,
     max_depth: int = 10
-) -> Tuple[RandomForestRegressor, Dict[str, float]]:
+) -> Tuple[RandomForestRegressor, np.ndarray, Dict[str, float]]:
     """
     Train Random Forest model.
     
@@ -215,9 +227,9 @@ def train_random_forest(
     
     predictions = model.predict(X_val)
     metrics = calculate_metrics(y_val, predictions)
-    
+
     logger.info(f"Random Forest - MAE: {metrics['MAE']:.2f}, sMAPE: {metrics['sMAPE']:.2f}%")
-    return model, metrics
+    return model, predictions, metrics
 
 
 def train_xgboost(
@@ -226,7 +238,7 @@ def train_xgboost(
     X_val: pd.DataFrame,
     y_val: np.ndarray,
     params: Optional[Dict[str, Any]] = None
-) -> Tuple[xgb.XGBRegressor, Dict[str, float]]:
+) -> Tuple[xgb.XGBRegressor, np.ndarray, Dict[str, float]]:
     """
     Train XGBoost model.
     
@@ -257,9 +269,9 @@ def train_xgboost(
     
     predictions = model.predict(X_val)
     metrics = calculate_metrics(y_val, predictions)
-    
+
     logger.info(f"XGBoost - MAE: {metrics['MAE']:.2f}, sMAPE: {metrics['sMAPE']:.2f}%")
-    return model, metrics
+    return model, predictions, metrics
 
 
 def train_lightgbm(
@@ -268,7 +280,7 @@ def train_lightgbm(
     X_val: pd.DataFrame,
     y_val: np.ndarray,
     params: Optional[Dict[str, Any]] = None
-) -> Tuple[lgb.LGBMRegressor, Dict[str, float]]:
+) -> Tuple[lgb.LGBMRegressor, np.ndarray, Dict[str, float]]:
     """
     Train LightGBM model.
     
@@ -300,9 +312,9 @@ def train_lightgbm(
     
     predictions = model.predict(X_val)
     metrics = calculate_metrics(y_val, predictions)
-    
+
     logger.info(f"LightGBM - MAE: {metrics['MAE']:.2f}, sMAPE: {metrics['sMAPE']:.2f}%")
-    return model, metrics
+    return model, predictions, metrics
 
 
 def time_series_cv(
@@ -331,7 +343,15 @@ def time_series_cv(
         X_train, X_val = X.iloc[train_idx], X.iloc[val_idx]
         y_train, y_val = y[train_idx], y[val_idx]
         
-        _, metrics = model_func(X_train, y_train, X_val, y_val, **model_kwargs)
+        res = model_func(X_train, y_train, X_val, y_val, **model_kwargs)
+        # support functions that return (model, predictions, metrics) or (model, metrics) or (predictions, metrics)
+        if isinstance(res, tuple) and len(res) == 3:
+            _, _, metrics = res
+        elif isinstance(res, tuple) and len(res) == 2:
+            # could be (model, metrics) or (preds, metrics)
+            _, metrics = res
+        else:
+            raise ValueError("model_func must return a tuple of length 2 or 3")
         metrics['fold'] = fold
         fold_metrics.append(metrics)
         
