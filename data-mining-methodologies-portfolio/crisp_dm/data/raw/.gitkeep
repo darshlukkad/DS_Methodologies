@@ -1,0 +1,50 @@
+# Raw Data Directory
+
+This directory stores the original, unmodified datasets downloaded from Kaggle.
+
+## Walmart Sales Forecasting Dataset
+
+**Source**: [Kaggle - Walmart Recruiting Store Sales Forecasting](https://www.kaggle.com/competitions/walmart-recruiting-store-sales-forecasting)
+
+**Download Command**:
+```bash
+kaggle competitions download -c walmart-recruiting-store-sales-forecasting -p data/raw
+```
+
+**Expected Files**:
+- `train.csv` - Historical sales data (Feb 2010 - Oct 2012)
+- `test.csv` - Stores/departments to forecast (Nov 2012)
+- `stores.csv` - Store metadata (type, size)
+- `features.csv` - Additional data (temperature, fuel price, markdown events, holidays)
+
+**Size**: ~3.6 MB (zipped)
+
+## Data Schema
+
+### train.csv
+- Store: Store number
+- Dept: Department number
+- Date: Week date
+- Weekly_Sales: Sales for the given department in the given store (target variable)
+- IsHoliday: Whether the week contains a special holiday
+
+### test.csv
+- Store, Dept, Date, IsHoliday (same as train, but no Weekly_Sales)
+
+### stores.csv
+- Store: Store number
+- Type: Store type (A, B, or C)
+- Size: Store size in square feet
+
+### features.csv
+- Store, Date, Temperature, Fuel_Price, MarkDown1-5, CPI, Unemployment, IsHoliday
+
+## Notes
+
+- The notebook automatically downloads these files if they don't exist
+- Files are excluded from git (see `.gitignore`)
+- Keep raw data immutable - all transformations go to `processed/`
+
+---
+
+*Place .gitkeep file to track this directory in git*
