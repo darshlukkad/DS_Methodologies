@@ -50,21 +50,21 @@ Each methodology is implemented as a **single, comprehensive Jupyter notebook** 
 
 **Notebook**: [`kdd/KDD.ipynb`](kdd/KDD.ipynb)
 
-## � Articles & 🎬 YouTube Scripts
+## Articles & Video Walkthroughs
 
-For readers who prefer written walkthroughs or a short spoken presentation, the following Medium articles and companion YouTube scripts are available:
+For readers who prefer written walkthroughs or video presentations, the following Medium articles and companion videos are available:
 
 - CRISP-DM (Walmart Sales Forecasting)
 	- Medium article: https://medium.com/@darshlukkad/crisp-dm-in-practice-a-hands-on-guide-to-reliable-data-science-projects-8f11d2f1ed1d
-	- YouTube script (repo): [`crisp_dm/youtube_script.md`](crisp_dm/youtube_script.md)
+	- Video walkthrough: https://drive.google.com/file/d/1VGsgHQeLYUCTQoZtpEoD7qM-eBNBnOSE/view?usp=drive_link
 
 - KDD (Knowledge Discovery in Databases)
 	- Medium article: https://medium.com/@darshlukkad/knowledge-discovery-in-practice-a-reproducible-kdd-walkthrough-for-weekly-sales-forecasting-076969dcb444
-	- YouTube script (repo): [`crisp_dm/youtube_script_kdd.md`](crisp_dm/youtube_script_kdd.md)
+	- Video walkthrough: https://drive.google.com/file/d/1rJORNx5LbKpLEeqOzB8LMV8KsIV4Zvav/view?usp=drive_link
 
 - SEMMA (Sample, Explore, Modify, Model, Assess)
 	- Medium article: https://medium.com/@darshlukkad/applying-semma-for-reproducible-weekly-sales-forecasting-cd954f58f664
-	- YouTube script (repo): [`crisp_dm/youtube_script_semma.md`](crisp_dm/youtube_script_semma.md)
+	- Video walkthrough: https://drive.google.com/file/d/1iMmNWxnpymCZrK_3kN1b_PtKZ494dlxv/view?usp=drive_link
 
 ## �🚀 Quick Start
 
